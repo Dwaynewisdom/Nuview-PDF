@@ -6,16 +6,24 @@ import Navbar from './navbar.jsx'
 import App from './App.jsx'
 import Merge from './Pages/merge.jsx'
 import Image from './Pages/Image.jsx'
+import PDFtooffice from './Pages/PDFtooffice.jsx'
+import PdfWatermarker from './Pages/watermark.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/merge" element={<Merge />} />
-        <Route path="/Image" element={<Image/>} />
-      </Routes>
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/merge" element={<Merge />} />
+            <Route path="/Image" element={<Image/>} />
+            <Route path="/PDFtooffice" element={<PDFtooffice/>} />
+            <Route path="/PdfWatermarker" element={<PdfWatermarker/>} />
+          </Routes>
+        </main>
+      </div>
     </BrowserRouter>
   </StrictMode>,
 )

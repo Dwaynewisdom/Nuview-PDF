@@ -2,14 +2,14 @@ import React, { useState, useRef } from 'react'
 import { PDFDocument } from 'pdf-lib'
 
 function Image() {
-    const [items, setItems] = useState([]) // { file, url }
+    const [items, setItems] = useState([]) 
     const inputRef = useRef(null)
     const [isDragging, setIsDragging] = useState(false)
 
     function onFiles(e) {
         const files = Array.from(e.target.files || [])
         addFiles(files)
-        // reset input so same file can be reselected if needed
+
         e.target.value = ''
     }
 
@@ -79,45 +79,49 @@ function Image() {
     }
 
     return (
-        <div className='flex flex-col'>
-            <h2 className='text-center font-bold text-2xl'>Images → PDF</h2>
+        <div className="mx-auto my-8 max-w-4xl px-4 sm:px-6 lg:px-8">
+            <div className="border border-gray-200 bg-white p-8 shadow-sm">
+                <h2 className='text-3xl font-bold text-gray-900 text-center'>Images → PDF</h2>
+                <p className='mt-2 text-gray-600 text-center'>Upload images and generate a single PDF. Drag & drop or click to select.</p>
 
-            <div
-                className={`w-full rounded-lg p-6 text-center cursor-pointer transition ${isDragging ? 'bg-gray-50 border-blue-300' : 'bg-white border-gray-200'} border-2 border-dashed mt-5`}
-                onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={handleDrop}
-                onClick={() => inputRef.current && inputRef.current.click()}
-            >
-                <input
-                    ref={inputRef}
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={onFiles}
-                    className="hidden"
-                />
-                <div className="flex flex-col items-center justify-center h-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16v-4a4 4 0 018 0v4m-5-4v4m0 0H5m6 0h6" />
-                    </svg>
-                    <p className="mt-2 text-sm text-gray-600">Drop images here, or click to select</p>
-                    <p className="mt-1 text-xs text-gray-400">{items.length} selected</p>
-                </div>
-            </div>
+                <div className="mt-8">
+                    <div
+                        className={`w-full rounded-3xl border-2 border-dashed p-6 text-center transition ${isDragging ? 'bg-gray-50 border-blue-300' : 'bg-white border-gray-200'} cursor-pointer`}
+                        onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
+                        onDragLeave={() => setIsDragging(false)}
+                        onDrop={handleDrop}
+                        onClick={() => inputRef.current && inputRef.current.click()}
+                    >
+                    {/*Image selection*/}
+                        <input
+                            ref={inputRef}
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={onFiles}
+                            className="hidden"
+                        />
+                        <div className="flex flex-col items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16v-4a4 4 0 018 0v4m-5-4v4m0 0H5m6 0h6" />
+                            </svg>
+                            <p className="mt-2 text-xl font-semibold text-gray-700">Drop images here, or click to select</p>
+                            <p className="mt-1 text-sm text-gray-400">{items.length} selected</p>
+                        </div>
+                    </div>
 
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
-                <button onClick={generatePdf} disabled={items.length === 0} className='bg-orange-500 m-9 rounded w-25 text-white font-bol d'>
-                    Generate PDF ({items.length})
-                </button>
-                <button onClick={removeAll} disabled={items.length === 0} style={{ color: 'red' }}>
-                    Remove All
-                </button>
-            </div>
+                    <div className='mt-6 flex gap-4 items-center'>
+                        <button onClick={generatePdf} disabled={items.length === 0} className='inline-flex items-center justify-center rounded-2xl bg-orange-500 px-6 py-3 text-white font-semibold hover:bg-orange-600 disabled:opacity-50'>
+                            Generate PDF ({items.length})
+                        </button>
+                        <button onClick={removeAll} disabled={items.length === 0} className='inline-flex items-center justify-center rounded-2xl border border-red-300 bg-red-50 px-4 py-2 text-red-700 font-semibold disabled:opacity-50'>
+                            Remove All
+                        </button>
+                    </div>
 
-                    <div className="flex flex-wrap gap-4">
+                    <div className="mt-6 flex flex-wrap gap-4">
                         {items.map((it, idx) => (
-                            <div ikey={idx} className="w-36 border rounded shadow-sm p-2 relative bg-white">
+                            <div key={idx} className="w-36 border rounded shadow-sm p-2 relative bg-white">
                                 <button
                                     onClick={() => removeAt(idx)}
                                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs shadow"
@@ -132,6 +136,8 @@ function Image() {
                             </div>
                         ))}
                     </div>
+                </div>
+            </div>
         </div>
     )
 }

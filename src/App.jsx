@@ -20,26 +20,16 @@ const services = [
     name: "PDF to Office",
     image: "https://cdn.jsdelivr.net/gh/Dwaynewisdom/Portfolio-New@18d69184f3c3c7c3b3ff233523205c9cd15df725/Images/pdf-file.png",
     text: "Seamlessly export your PDF data into fully editable Word, Excel, or PowerPoint documents.",
-    id: "organizing" 
-  },
-  {
-    name: "Edit PDF",
-    image: "https://cdn.jsdelivr.net/gh/Dwaynewisdom/Portfolio-New@18d69184f3c3c7c3b3ff233523205c9cd15df725/Images/edit-file.png",
-    text: "Modify text, tweak layouts, and update content directly inside your browser.",
-    id: "organizing"
+    id: "organizing" ,
+    link:"/PDFtooffice"
   },
   {
     name: "Watermark",
     image: "https://cdn.jsdelivr.net/gh/Dwaynewisdom/Portfolio-New@18d69184f3c3c7c3b3ff233523205c9cd15df725/Images/stamp.png",
-    text: "Add custom text or image overlays to protect, brand, and secure your files.",
-    id: "organizing"
+    text: "Add custom text to protect, brand, and secure your files.",
+    id: "organizing",
+    link:"/PdfWatermarker"
   },
-  {
-    name: "Rearrange Pages",
-    image: "https://cdn.jsdelivr.net/gh/Dwaynewisdom/Portfolio-New@18d69184f3c3c7c3b3ff233523205c9cd15df725/Images/stack.png",
-    text: "Drag, drop, rotate, or delete individual pages to organize your document your way.",
-    id: "organizing"
-  }
 ];
 
   const links = [{

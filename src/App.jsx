@@ -53,7 +53,7 @@ const services = [
               key={i}
               className="flex items-center gap-4 p-4 rounded-2xl border border-gray-200/10 bg-white/3 transition-transform transform hover:scale-105 duration-200 shadow-xl"
             >
-            <a href = {s.link}>
+            <Link to= {s.link}>
               <div className="w-25 h-12 flex items-center justify-center rounded-lg bg-white text-white font-semibold">
                 <img src={s.image} className="w-15 h-15 p-2"/>
               </div>
@@ -61,7 +61,7 @@ const services = [
                 <h3 className="text-lg font-medium ">{s.name}</h3>
                 <p className="text-sm ">{s.text || 'Quick and easy'}</p>
               </div>
-            </a>
+            </Link>
             </article>
           ))}
         </div>

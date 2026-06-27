@@ -11,7 +11,7 @@ import PdfWatermarker from './Pages/watermark.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-1">

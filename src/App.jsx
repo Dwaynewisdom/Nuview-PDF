@@ -30,6 +30,13 @@ const services = [
     id: "organizing",
     link:"/PdfWatermarker"
   },
+  {
+    name: "Edit PDF",
+    image: "https://cdn.jsdelivr.net/gh/Dwaynewisdom/Portfolio-New@18d69184f3c3c7c3b3ff233523205c9cd15df725/Images/edit.png",
+    text: "Modify text, images, and layout directly within your PDF files.",
+    id: "organizing",
+    link:"/Editpdf"
+  }
 ];
 
   const links = [{

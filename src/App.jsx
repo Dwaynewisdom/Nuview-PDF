@@ -32,7 +32,7 @@ const services = [
   },
   {
     name: "Edit PDF",
-    image: "https://cdn.jsdelivr.net/gh/Dwaynewisdom/Portfolio-New@18d69184f3c3c7c3b3ff233523205c9cd15df725/Images/edit.png",
+    image: "https://cdn.jsdelivr.net/gh/Dwaynewisdom/Portfolio-New@8ba4dfe353b3e5a8e349fa9fb4818e5c52af1e58/Images/edit-file.png",
     text: "Edit existing PDF text, add new content, and save your changes instantly.",
     id: "editing",
     link: "/editpdf"

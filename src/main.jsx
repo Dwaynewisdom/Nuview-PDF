@@ -8,6 +8,7 @@ import Merge from './Pages/merge.jsx'
 import Image from './Pages/Image.jsx'
 import PDFtooffice from './Pages/PDFtooffice.jsx'
 import PdfWatermarker from './Pages/watermark.jsx'
+import PdfEditor from './Pages/editpdf.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/Image" element={<Image/>} />
             <Route path="/PDFtooffice" element={<PDFtooffice/>} />
             <Route path="/PdfWatermarker" element={<PdfWatermarker/>} />
+            <Route path="/editpdf" element={<PdfEditor/>}/>
           </Routes>
         </main>
       </div>

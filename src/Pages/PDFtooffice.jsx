@@ -388,7 +388,7 @@ export default function PDFtooffice() {
             />
             {conversionUsed && !downloadUrl && (
               <div className="text-sm text-orange-600 font-semibold">
-                🔒 Daily free conversion used. Upgrade to convert more.
+                Daily free conversion used.
               </div>
             )}
             {statusMessage && <div className="text-sm text-gray-700">{statusMessage}</div>}

@@ -23,6 +23,60 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Cancel or wait for in-progress Pages deployment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          env_name="github-pages"
+          timeout_secs=$((10*60))
+          interval=10
+          elapsed=0
+
+          cancel_in_progress() {
+            id="$1"
+            echo "Canceling in-progress deployment $id"
+            curl -s -X POST \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "Content-Type: application/json" \
+              "https://api.github.com/repos/$repo/deployments/$id/statuses" \
+              -d '{"state":"inactive","description":"Canceled by workflow to allow new Pages deployment."}' >/dev/null
+          }
+
+          while [ $elapsed -lt $timeout_secs ]; do
+            ids=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+                       -H "Accept: application/vnd.github+json" \
+                       "https://api.github.com/repos/$repo/deployments?environment=${env_name}" \
+                       | jq -r '.[].id // empty' || echo "")
+
+            any_in_progress=false
+            for id in $ids; do
+              state=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
+                          -H "Accept: application/vnd.github+json" \
+                          "https://api.github.com/repos/$repo/deployments/$id/statuses" \
+                          | jq -r '.[0].state // empty' || echo "")
+              if [ "$state" = "in_progress" ]; then
+                any_in_progress=true
+                cancel_in_progress "$id"
+              fi
+            done
+
+            if [ "$any_in_progress" = "false" ]; then
+              echo "No in-progress Pages deployment found."
+              break
+            fi
+
+            echo "Waiting $interval seconds for deployments to settle..."
+            sleep $interval
+            elapsed=$((elapsed + interval))
+          done
+
+          if [ $elapsed -ge $timeout_secs ]; then
+            echo "Warning: Timed out waiting for in-progress Pages deployments."
+          fi
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:

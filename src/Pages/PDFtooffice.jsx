@@ -176,6 +176,47 @@ export default function PDFtooffice() {
   const [loading, setLoading] = useState(false)
   const [downloadUrl, setDownloadUrl] = useState(null)
   const [statusMessage, setStatusMessage] = useState('')
+  const [conversionUsed, setConversionUsed] = useState(false)
+  const [nextResetTime, setNextResetTime] = useState(null)
+
+  // Check if daily conversion limit has been used
+  useEffect(() => {
+    const storedData = localStorage.getItem('pdfConversionLimit')
+    if (storedData) {
+      const { date, used, resetTime } = JSON.parse(storedData)
+      const today = new Date().toDateString()
+      
+      if (date === today) {
+        setConversionUsed(used)
+        setNextResetTime(resetTime)
+      } else {
+        // New day, reset the limit
+        localStorage.removeItem('pdfConversionLimit')
+        setConversionUsed(false)
+        setNextResetTime(null)
+      }
+    }
+  }, [])
+
+  // Calculate time until reset
+  useEffect(() => {
+    if (!nextResetTime) return
+    
+    const timer = setInterval(() => {
+      const now = new Date().getTime()
+      const timeLeft = nextResetTime - now
+      
+      if (timeLeft <= 0) {
+        localStorage.removeItem('pdfConversionLimit')
+        setConversionUsed(false)
+        setNextResetTime(null)
+        setStatusMessage('')
+        clearInterval(timer)
+      }
+    }, 1000)
+    
+    return () => clearInterval(timer)
+  }, [nextResetTime])
 
   useEffect(() => {
     return () => {
@@ -200,6 +241,15 @@ export default function PDFtooffice() {
   }
 
   async function handleConvert() {
+    // Check daily limit
+    if (conversionUsed) {
+      const timeLeft = nextResetTime - new Date().getTime()
+      const hours = Math.floor(timeLeft / (1000 * 60 * 60))
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))
+      setError(`🔒 Free daily conversion used. Next conversion available in ${hours}h ${minutes}m. Upgrade to convert more.`)
+      return
+    }
+
     if (!file) {
       setError('Select a PDF file first.')
       return
@@ -253,6 +303,16 @@ export default function PDFtooffice() {
         const objectUrl = URL.createObjectURL(blob)
         setDownloadUrl({ url: objectUrl, name: `${file.name.replace(/\.pdf$/i, '')}.${format}` })
         setStatusMessage('Conversion complete. Download your file below.')
+        
+        // Mark conversion as used for today
+        const resetTime = new Date().getTime() + (24 * 60 * 60 * 1000)
+        localStorage.setItem('pdfConversionLimit', JSON.stringify({
+          date: new Date().toDateString(),
+          used: true,
+          resetTime
+        }))
+        setConversionUsed(true)
+        setNextResetTime(resetTime)
       } else if (fileInfo?.FileData) {
         // ConvertAPI returned the file inline as base64 in FileData
         try {
@@ -268,6 +328,16 @@ export default function PDFtooffice() {
           const name = fileInfo.FileName || `${file.name.replace(/\.pdf$/i, '')}.${fileInfo.FileExt || format}`
           setDownloadUrl({ url: objectUrl, name })
           setStatusMessage('Conversion complete. Download your file below.')
+          
+          // Mark conversion as used for today
+          const resetTime = new Date().getTime() + (24 * 60 * 60 * 1000)
+          localStorage.setItem('pdfConversionLimit', JSON.stringify({
+            date: new Date().toDateString(),
+            used: true,
+            resetTime
+          }))
+          setConversionUsed(true)
+          setNextResetTime(resetTime)
         } catch (err) {
           console.error('Failed to decode FileData from ConvertAPI:', err)
           console.error('ConvertAPI fileInfo:', fileInfo)
@@ -311,11 +381,16 @@ export default function PDFtooffice() {
           <div className="space-y-6 rounded-[28px] border border-gray-200 bg-gray-50 p-6">
             <FormatSelector format={format} setFormat={setFormat} />
             <ConvertPanel
-              disabled={!file || loading}
+              disabled={!file || loading || conversionUsed}
               loading={loading}
               onConvert={handleConvert}
               downloadUrl={downloadUrl}
             />
+            {conversionUsed && !downloadUrl && (
+              <div className="text-sm text-orange-600 font-semibold">
+                🔒 Daily free conversion used. Upgrade to convert more.
+              </div>
+            )}
             {statusMessage && <div className="text-sm text-gray-700">{statusMessage}</div>}
             {error && !downloadUrl && <div className="text-sm text-red-600">{error}</div>}
           </div>

@@ -116,7 +116,7 @@ export default function PdfEditor() {
   return (
     <div className="min-h-screen bg-white text-neutral-100 flex flex-col">
       {/* Toolbar */}
-      <header className="flex items-center gap-4 px-6 py-3 border-b border-neutral-800 bg-orange-700">
+      <header className="flex items-center gap-4 px-6 py-3 border-b border-neutral-800 bg-orange-700 ">
         <label className="text-sm px-3 py-1.5 rounded-md bg-neutral-800 hover:bg-neutral-700 cursor-pointer">
           Open PDF
           <input type="file" accept="application/pdf" onChange={onFileChange} className="hidden" />

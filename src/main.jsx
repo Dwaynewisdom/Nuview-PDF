@@ -8,7 +8,7 @@ import Merge from './Pages/merge.jsx'
 import Image from './Pages/Image.jsx'
 import PDFtooffice from './Pages/PDFtooffice.jsx'
 import PdfWatermarker from './Pages/watermark.jsx'
-import PdfEditor from './Pages/editpdf.jsx'
+import PdfEditor from './Pages/Editpdf.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

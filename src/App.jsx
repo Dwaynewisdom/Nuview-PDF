@@ -36,6 +36,13 @@ const services = [
     text: "Edit existing PDF text, add new content, and save your changes instantly.",
     id: "editing",
     link: "/editpdf"
+  },
+  {
+    name:"Document To Markdown",
+    image:"https://cdn.jsdelivr.net/gh/Dwaynewisdom/Portfolio-New@57e4a590cc2044cb32d9f12fb69352f7fdad9ab6/markdown.png",
+    text:"Allow Ai to better understand your documents by turning them into easily readable computer langauge",
+    id:"edit",
+    link:"/DoctoMD"
   }
 ];
 

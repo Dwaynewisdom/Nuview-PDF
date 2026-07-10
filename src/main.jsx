@@ -9,6 +9,7 @@ import Image from './Pages/Image.jsx'
 import PDFtooffice from './Pages/PDFtooffice.jsx'
 import PdfWatermarker from './Pages/watermark.jsx'
 import PdfEditor from './Pages/Editpdf.jsx'
+import DocumentToMarkdown from "./Pages/DoctoMD"
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/PDFtooffice" element={<PDFtooffice/>} />
             <Route path="/PdfWatermarker" element={<PdfWatermarker/>} />
             <Route path="/editpdf" element={<PdfEditor/>}/>
+            <Route path="/DoctoMD" element ={<DocumentToMarkdown/>}/>
           </Routes>
         </main>
       </div>

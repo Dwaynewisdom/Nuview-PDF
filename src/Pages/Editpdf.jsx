@@ -3,20 +3,19 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 
-// Use CDN-hosted worker matched to react-pdf's internal pdfjs version
-// This avoids base path / bundler conflicts with local imports
+
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const SCALE = 1.5;
 
 export default function PdfEditor() {
-  const [fileBytes, setFileBytes] = useState(null); // original bytes, kept for export
-  const [fileUrl, setFileUrl] = useState(null); // object URL for react-pdf display
+  const [fileBytes, setFileBytes] = useState(null); 
+  const [fileUrl, setFileUrl] = useState(null);
   const [numPages, setNumPages] = useState(0);
   const [pageNum, setPageNum] = useState(1);
-  const [mode, setMode] = useState("edit"); // "edit" | "preview"
-  const [items, setItems] = useState({}); // { pageNum: [ {id, str, screenX, screenY, width, height, fontSize, pdfX, pdfY, pdfWidth, pdfFontSize} ] }
-  const [edits, setEdits] = useState({}); // { itemId: newText }
+  const [mode, setMode] = useState("edit");
+  const [items, setItems] = useState({}); 
+  const [edits, setEdits] = useState({}); 
   const [exporting, setExporting] = useState(false);
   const pageBoxRef = useRef(null);
 
@@ -24,17 +23,17 @@ export default function PdfEditor() {
     const file = e.target.files?.[0];
     if (!file) return;
     const buf = await file.arrayBuffer();
-    setFileBytes(buf.slice(0)); // keep an untouched copy
+    setFileBytes(buf.slice(0));
     setFileUrl(URL.createObjectURL(new Blob([buf], { type: "application/pdf" })));
     setItems({});
     setEdits({});
     setPageNum(1);
   };
 
-  // Pull text items + positions once a page has rendered, so overlay lines up with the canvas
+ 
   const onPageRender = useCallback(
     async (page) => {
-      if (items[pageNum]) return; // already extracted
+      if (items[pageNum]) return; 
       const viewport = page.getViewport({ scale: SCALE });
       const textContent = await page.getTextContent();
 
@@ -82,7 +81,7 @@ export default function PdfEditor() {
           const newText = edits[it.id];
           if (newText === undefined || newText === it.str) continue;
 
-          // cover the original text, then draw the edited string in its place
+     
           page.drawRectangle({
             x: it.pdfX - 1,
             y: it.pdfY - it.pdfFontSize * 0.25,

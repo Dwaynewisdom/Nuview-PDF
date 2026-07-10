@@ -194,7 +194,7 @@ export default function PdfEditor() {
                 onBlur={(e) => handleEdit(it.id, e.currentTarget.textContent)}
                 className={
                   mode === "edit"
-                    ? "absolute outline-dashed outline-1 outline-amber-400/60 bg-amber-400/10 focus:bg-neutral-900 focus:text-white cursor-text"
+                    ? "absolute outline-dashed outline-1 outline-white bg-black focus:bg-neutral-900 focus:text-white cursor-text"
                     : "absolute"
                 }
                 style={{

@@ -141,14 +141,14 @@ export default function PdfWatermarker() {
 
           {/* Action Buttons */}
           <div className='flex gap-4 mt-6'>
-            <button onClick={handlePick} className='inline-flex items-center justify-center px-4 py-2 bg-orange-500 text-white rounded-2xl font-semibold shadow hover:bg-orange-600'>
+            <button onClick={handlePick} className='inline-flex items-center justify-center px-4 py-2 bg-orange-500 text-white rounded-2xl font-semibold shadow hover:bg-orange-400'>
               Select PDF
             </button>
 
             <button 
               onClick={handleWatermark} 
               disabled={processing || !file || !watermarkText.trim()} 
-              className='inline-flex items-center justify-center px-4 py-2 bg-orange-500 text-white rounded-2xl font-semibold shadow disabled:opacity-50 hover:bg-orange-600'
+              className='inline-flex items-center justify-center px-4 py-2 bg-orange-500 text-white rounded-2xl font-semibold shadow disabled:opacity-50 hover:bg-orange-300'
             >
               {processing ? 'Processing…' : 'Apply & Download'}
             </button>

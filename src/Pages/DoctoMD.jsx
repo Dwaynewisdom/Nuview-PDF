@@ -58,7 +58,7 @@ function FileDropZone({ fileName, onFileSelect, error, setError }) {
       </div>
       {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
       <p className="mt-4 text-sm text-gray-600">
-        Please ensure to use PDF OR DOCX containing text. If necessary, you can convert your file to a word document and then return to convert it into Markdown.
+        Please ensure to use PDF OR DOCX containing text. If necessary, you can convert your file to a word document and then return to convert it into Markdown, Images in the document may lead to long unreadable text.
       </p>
     </div>
   );
@@ -179,7 +179,7 @@ export default function DocumentToMarkdown() {
 
     setError('');
     setLoading(true);
-    setStatusMessage('Parsing document structure...');
+    setStatusMessage('Transcribing Document....');
     setDownloadUrl(null);
     setMarkdown('');
 
@@ -187,7 +187,7 @@ export default function DocumentToMarkdown() {
       const formData = new FormData();
       formData.append('document', file); 
 
-      // Check for a live URL in Vite environment variables, otherwise use local computer
+
       const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
       const response = await fetch(`${backendUrl}/api/convert`, {
@@ -258,7 +258,7 @@ export default function DocumentToMarkdown() {
               <label className="font-semibold text-gray-800 mb-2">Markdown Preview</label>
               <div className="flex-1 w-full rounded-xl border border-gray-300 bg-gray-900 p-4 overflow-hidden relative">
                 {markdown ? (
-                  <pre className="w-full h-full text-gray-100 text-sm font-mono whitespace-pre-wrap overflow-y-auto custom-scrollbar">
+                  <pre className="w-full h-full text-gray-100 text-sm font-mono whitespace-pre-wrap wrap break-word overflow-y-auto overflow-x-hidden custom-scrollbar">
                     {markdown}
                   </pre>
                 ) : (

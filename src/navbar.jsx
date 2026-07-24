@@ -1,7 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth0 } from '@auth0/auth0-react'
 
 function Navbar() {
+  const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0()
   return (
     <>
     <nav className='m-5 border-2 bg-orange-700 border-gray-300 shadow-lg shadow-black/20 rounded-2xl p-6 flex flex-row items-center justify-between gap-4'>
@@ -21,16 +23,38 @@ function Navbar() {
             </ul>
         </div>
 
-        {/*<div className='flex flex-row'>
-            <ul className='flex flex-row gap-3 list-none m-0 p-0 h-25 '>
-                <li>
-                    <a href ="" className='inline-flex items-center justify-center px-4 py-2 bg-amber-600 text-white rounded-2xl font-semibold shadow transition-transform transform hover:scale-105 duration-200'>Login</a>
-                </li>
-                <li>
-                    <a href ="" className='inline-flex items-center justify-center px-4 py-2 bg-amber-600 text-white rounded-2xl font-semibold shadow transition-transform transform hover:scale-105 duration-200'>Sign Up</a>
-                </li>
+        <div className='flex flex-col'>
+            <ul className='flex flex-col gap-3 list-none m-0 p-0 h-25 '>
+              {isLoading ? (
+                <li className='inline-flex items-center justify-center px-4 py-2 bg-amber-500 text-white rounded-2xl font-semibold'>Checking auth...</li>
+              ) : isAuthenticated ? (
+                <>
+                  <li className='hidden sm:inline-flex items-center text-white/90 font-bold mr-2'>
+                    Hi, {user?.name ?? user?.email}
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => logout({ returnTo: window.location.origin })}
+                      className='inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-2xl font-semibold shadow transition-transform transform hover:scale-105 duration-200'
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <button
+                      onClick={() => loginWithRedirect()}
+                      className='inline-flex items-center justify-center px-4 py-2 bg-amber-600 text-white rounded-2xl font-semibold shadow transition-transform transform hover:scale-105 duration-200'
+                    >
+                      Login
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
-        </div>*/}
+        </div>
     </nav>
     </>
   )

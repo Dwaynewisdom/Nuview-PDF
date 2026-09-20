@@ -17,7 +17,7 @@ function FileDropZone({ fileName, onFileSelect, error, setError }) {
     const isValidExtension = selected.name.match(/\.(pdf|docx|doc)$/i);
 
     if (!validTypes.includes(selected.type) && !isValidExtension) {
-      setError('Only PDF and DOCX files are supported. Please drop a valid document.');
+      setError('Only DOCX files are supported. Please drop a valid document.');
       return;
     }
     setError('');
@@ -48,17 +48,17 @@ function FileDropZone({ fileName, onFileSelect, error, setError }) {
         <input
           ref={inputRef}
           type="file"
-          accept=".pdf,.docx,.doc"
+          accept=".docx,.doc"
           className="hidden"
           onChange={(e) => handleFiles(e.target.files)}
         />
-        <p className="text-xl font-semibold text-gray-700">Drag and drop a PDF or DOCX here</p>
+        <p className="text-xl font-semibold text-gray-700">Drag and drop a DOCX here</p>
         <p className="mt-2 text-sm text-gray-500">Or click to browse files</p>
         <p className="mt-4 text-sm text-gray-500">{fileName || 'No file selected yet'}</p>
       </div>
       {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
       <p className="mt-4 text-sm text-gray-600">
-        Please ensure to use PDF OR DOCX containing text. If necessary, you can convert your file to a word document and then return to convert it into Markdown, Images in the document may lead to long unreadable text.
+        Please ensure to use DOCX containing text. If necessary, you can convert your file to a word document and then return to convert it into Markdown, Images in the document may lead to long unreadable text.
       </p>
     </div>
   );

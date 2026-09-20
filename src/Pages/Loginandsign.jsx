@@ -1,63 +1,134 @@
-import React from 'react'
-import { useAuth0 } from '@auth0/auth0-react'
+import { createClient } from '@supabase/supabase-js'
+import { useState } from 'react'
 
-export default function Loginandsign() {
-  const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0()
-  if (error) {
-    return <div>Authentication Error: {error.message}</div>
-  } 
+const rawSupabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey =
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+
+let resolvedSupabaseUrl = ''
+
+if (rawSupabaseUrl) {
+  try {
+    const url = new URL(rawSupabaseUrl)
+    if (url.protocol === 'http:' || url.protocol === 'https:') {
+      resolvedSupabaseUrl = url.toString()
+    }
+  } catch {
+    resolvedSupabaseUrl = ''
+  }
+}
+
+const supabase = resolvedSupabaseUrl && supabaseAnonKey
+  ? createClient(resolvedSupabaseUrl, supabaseAnonKey)
+  : null
+
+const Loginandsign = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [message, setMessage] = useState({ type: '', text: '' })
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    if (!supabase) {
+      setMessage({
+        type: 'error',
+        text: 'Supabase is not configured yet. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your environment.'
+      })
+      return
+    }
+
+    setIsSubmitting(true)
+    setMessage({ type: '', text: '' })
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    })
+
+    setIsSubmitting(false)
+
+    if (error) {
+      setMessage({ type: 'error', text: error.message })
+      return
+    }
+
+    if (data?.user && !data.session) {
+      setMessage({
+        type: 'success',
+        text: 'Sign-up successful! Check your email for the confirmation link.'
+      })
+    } else {
+      setMessage({
+        type: 'success',
+        text: 'Account created successfully.'
+      })
+    }
+
+    setEmail('')
+    setPassword('')
+  }
+
+  if (!supabase) {
+    return (
+      <div className="p-6 text-center text-gray-700">
+        Supabase is not configured yet. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your environment.
+      </div>
+    )
+  }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-100 p-4 font-sans text-slate-900">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden relative">
-        <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-blue-500 to-indigo-600" />
-        <div className="p-8 sm:p-10">
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">
-              {isAuthenticated ? 'Welcome back' : 'Secure login with Auth0'}
-            </h1>
-            <p className="text-slate-500">
-              {isAuthenticated
-                ? 'You are signed in. Manage your session below.'
-                : 'Use Auth0 to sign in securely and access your PDF tools.'}
-            </p>
-          </div>
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow-md">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <h1 className="text-2xl font-bold mb-4">Sign Up</h1>
 
-          {isLoading ? (
-            <div className="rounded-3xl border border-slate-200 p-8 text-center text-slate-700">
-              Checking authentication...
-            </div>
-          ) : isAuthenticated ? (
-            <div className="space-y-6">
-              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
-                <p className="text-sm text-slate-500">Signed in as</p>
-                <p className="text-lg font-semibold text-slate-900">{user?.name ?? user?.email}</p>
-                <p className="text-sm text-slate-600 mt-1">{user?.email}</p>
-              </div>
-              <button
-                type="button"
-                onClick={() => logout({ returnTo: window.location.origin })}
-                className="w-full bg-red-600 hover:bg-red-500 text-white py-3 rounded-2xl font-semibold transition-transform transform hover:scale-[1.01]"
-              >
-                Log out
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-5">
-              <button
-                type="button"
-                onClick={() => loginWithRedirect()}
-                className="w-full bg-orange-700 hover:bg-orange-600 text-white py-3 rounded-2xl font-semibold transition-transform transform hover:scale-[1.01]"
-              >
-                Login with Auth0
-              </button>
-              <p className="text-sm text-slate-500 text-center">
-                After login, you will be redirected back to the app automatically.
-              </p>
-            </div>
-          )}
+        <div>
+          <label htmlFor="email" className="block mb-2 font-semibold">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+            className="w-full p-2 border rounded"
+          />
         </div>
-      </div>
+
+        <div>
+          <label htmlFor="password" className="block mb-2 font-semibold">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            minLength={6}
+            required
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-800 disabled:opacity-60"
+        >
+          {isSubmitting ? 'Signing up...' : 'Sign Up'}
+        </button>
+      </form>
+
+      {message.text && (
+        <p
+          className={`mt-4 text-sm ${
+            message.type === 'error' ? 'text-red-600' : 'text-green-600'
+          }`}
+        >
+          {message.text}
+        </p>
+      )}
     </div>
   )
 }
+
+export default Loginandsign

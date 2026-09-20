@@ -17,13 +17,6 @@ const services = [
     link:"/Image" 
   },
   {
-    name: "PDF to Office",
-    image: "https://cdn.jsdelivr.net/gh/Dwaynewisdom/Portfolio-New@18d69184f3c3c7c3b3ff233523205c9cd15df725/Images/pdf-file.png",
-    text: "Seamlessly export your PDF data into fully editable Word, Excel, or PowerPoint documents.",
-    id: "organizing" ,
-    link:"/PDFtooffice"
-  },
-  {
     name: "Watermark",
     image: "https://cdn.jsdelivr.net/gh/Dwaynewisdom/Portfolio-New@18d69184f3c3c7c3b3ff233523205c9cd15df725/Images/stamp.png",
     text: "Add custom text to protect, brand, and secure your files.",
